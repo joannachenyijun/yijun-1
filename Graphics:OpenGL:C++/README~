@@ -1,0 +1,7 @@
+
+Instructions:
+	1. compile & link: make
+	2: run: ./teapot
+	3. clean: make clean
+
+Note: Line 473 is used to specify the number of virtual point lights.
