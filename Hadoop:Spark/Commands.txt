@@ -1,0 +1,15 @@
+hdfs dfs -copyFromLocal /scratch2/dkwietn/reuters/ /data
+/home/dkwietn/software/spark-1.3.0-bin-hadoop2.4/bin/spark-submit --master spark://node0033:7077 --executor-memory 8G --driver-memory 8G createRanked/target/scala-2.10/create-ranked-index_2.10-1.0.jar hdfs://node0033:8020/data hdfs://node0033:8020/ranked 512
+hdfs dfs -cat /ranked_index/part* | hdfs dfs -put - /ranked_index.txt
+hdfs dfs -cat /ranked_dictionary/part* | hdfs dfs -put - /ranked_dictionary.txt
+/home/dkwietn/software/spark-1.3.0-bin-hadoop2.4/bin/spark-submit --master spark://node0033:7077 --executor-memory 8G --driver-memory 8G rankedInterface/target/scala-2.10/ranked-interface_2.10-1.0.jar hdfs://node0033:8020/ 512
+
+
+hdfs dfs -rm -r -f /ranked_index /ranked_dictionary
+hdfs dfs -rm -r -f /ranked_index.txt /ranked_dictionary.txt
+
+
+hdfs dfs -mkdir /smallresults
+/home/dkwietn/software/spark-1.3.0-bin-hadoop2.4/bin/spark-submit --master spark://node0033:7077 --executor-memory 8G --driver-memory 8G createRanked/target/scala-2.10/create-ranked-index_2.10-1.0.jar hdfs://node0033:8020/smalldata hdfs://node0033:8020/small_ranked 512
+hdfs dfs -cat /small_ranked_index/part* | hdfs dfs -put - /smallresults/ranked_index.txt
+hdfs dfs -cat /small_ranked_dictionary/part* | hdfs dfs -put - /smallresults/ranked_dictionary.txt
